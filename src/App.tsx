@@ -1,6 +1,6 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import logo from './images/header.jpg'
+import './App.css'
 
 // TODO: Missing return type on function  @typescript-eslint/explicit-module-boundary-types
 // eslint-disable-next-line
@@ -22,7 +22,7 @@ function App() {
         </a>
       </header>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
