@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/circleci/circleci-docs.svg?style=svg)](https://circleci.com/gh/true-runes/gensosenkyo_2021_frontend) ![Netlify Status](https://api.netlify.com/api/v1/badges/1cfeee9c-5f51-461c-aac6-f8733e3228cb/deploy-status)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
