@@ -1,0 +1,115 @@
+version: 2.1
+
+orbs:
+  slack: circleci/slack@4.1
+
+executors:
+  node_executor:
+    docker:
+      # https://hub.docker.com/r/cimg/node
+      - image: cimg/node:<< parameters.version_tag >>
+    parameters:
+      version_tag:
+        type: string
+        default: 14.16.1
+
+jobs:
+  build:
+    executor:
+      name: node_executor
+      version_tag: 14.17.0
+    environment:
+      TZ: "Asia/Tokyo"
+    working_directory: ~/working_directory
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Yarn Cache
+          keys:
+            - yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-packages-v1-{{ .Branch }}-
+            - yarn-packages-v1-
+      - run:
+          name: Artifacts 用のディレクトリを作成する
+          command: |
+            mkdir /tmp/build_job_artifacts
+      - run:
+          name: echo コマンドで動作確認をする
+          command: |
+            echo 'Hello, CircleCI World!'
+          shell: /bin/sh # デフォルト値（任意項目）
+          environment:
+            FOO: BAR
+          background: false # デフォルト値（任意項目）
+          working_directory: . # デフォルト値（任意項目）
+          no_output_timeout: 10m # デフォルト値（任意項目）
+          when: on_success # デフォルト値（任意項目）
+      - run:
+          name: Node.js と Npm のバージョン等を確認し、Artifacts に格納する
+          command: |
+            which node > /tmp/destination_artifacts
+            node --version > /tmp/build_job_artifacts/node_version.txt
+            which npm > /tmp/build_job_artifacts/which_npm.txt
+            npm --version > /tmp/build_job_artifacts/npm_version.txt
+      - run:
+          name: Install Yarn
+          command: |
+            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+            echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+            sudo apt-get update -y && sudo apt-get install yarn -y
+      - run:
+          name: $ yarn install を行う
+          command: |
+            yarn install
+      - save_cache:
+          name: Save Yarn Cache
+          paths:
+            - ~/.cache/yarn
+          key: yarn-packages-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+      - slack/notify:
+          channel: notice-circleci
+          event: pass
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": "[PASSED] Suikoden Election 2021 (Frontend)",
+                      "emoji": true
+                    }
+                  ]
+                }
+              ]
+            }
+      - slack/notify:
+          channel: notice-circleci
+          event: fail
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": "[FAILED] Suikoden Election 2021 (Frontend)",
+                      "emoji": true
+                    }
+                  ]
+                }
+              ]
+            }
+      - store_artifacts:
+          path: /tmp/destination_artifacts
+          destination: build_job
+      - store_artifacts:
+          path: /tmp/build_job_artifacts
+
+workflows:
+  version: 2
+  gensosenkyo_2021_frontend:
+    jobs:
+      - build
