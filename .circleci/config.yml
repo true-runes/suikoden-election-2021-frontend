@@ -110,6 +110,6 @@ jobs:
 
 workflows:
   version: 2
-  gensosenkyo_2021_frontend:
+  幻水総選挙2021 フロントエンド:
     jobs:
       - build
