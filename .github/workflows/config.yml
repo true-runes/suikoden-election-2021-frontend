@@ -8,6 +8,10 @@ jobs:
       image: node:14.17.0
     steps:
       - uses: actions/checkout@v2
+      - name: simple-git-hooks 用のダミーディレクトリを作成
+        run: |
+          mkdir .git
+          mkdir .git/hooks
       - name: 基本パッケージのインストールを行う
         run: |
           apt-get update
