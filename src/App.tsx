@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import axios from 'axios'
 
 import logo from './images/header.jpg'
 import './App.css'
 
-// TODO: Missing return type on function  @typescript-eslint/explicit-module-boundary-types
-// eslint-disable-next-line
+// TODO: .eslintrc.json で無理矢理 OFF にしたものは ON で通るようにする
+// "@typescript-eslint/no-explicit-any": "off",
+// "@typescript-eslint/explicit-module-boundary-types": "off"
 function App() {
   const [resultArray, setResultArray] = useState([
     {
@@ -24,6 +25,7 @@ function App() {
     setSubmitValue(event.target.value)
   }
 
+  // FIXME: 命名の変更
   const letsSearch = (event: any) => {
     setIsNowLoading(true)
 
