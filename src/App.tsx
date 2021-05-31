@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import axios from 'axios'
 import { Tweet } from 'react-twitter-widgets'
+import { BrowserRouter, Link } from 'react-router-dom'
 
 import logo from './images/header.jpg'
 import './App.css'
@@ -87,6 +88,9 @@ function App() {
           </div>
         )
       })}
+      <BrowserRouter>
+        <Link to="/">Back To Top</Link>{' '}
+      </BrowserRouter>
     </div>
   )
 }
