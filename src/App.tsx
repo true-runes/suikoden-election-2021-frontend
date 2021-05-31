@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import axios from 'axios'
+import { Tweet } from 'react-twitter-widgets'
 
 import logo from './images/header.jpg'
 import './App.css'
@@ -69,6 +70,7 @@ function App() {
     <div className="App">
       <img className="ui fluid image" src={logo}></img>
       {nowLoadingText}
+      {/* 画面が一度 top に戻るのはあんまイケてない気もする */}
       <form onSubmit={letsSearch}>
         <label>
           推し台詞: アカウント名(@hoge, @は省略可能)を入れてください。
@@ -81,11 +83,7 @@ function App() {
       {resultArray.map((e) => {
         return (
           <div key={e.id}>
-            <div>
-              {e.username} さん (@{e.screenName}) の結果は次の通りです / url:{' '}
-              {e.url}
-              <br /> <br />
-            </div>
+            <Tweet tweetId={e.tweetId} />
           </div>
         )
       })}
