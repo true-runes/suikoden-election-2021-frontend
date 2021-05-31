@@ -11,15 +11,25 @@ import './App.css'
 function App() {
   const [resultArray, setResultArray] = useState([
     {
-      id: 12345,
-      screenName: 'hogehoge',
-      tweetId: '987654',
-      tweetUrl: 'https://www.google.co.jp/',
+      id: '10',
+      tweetId: '1396432867352809725',
+      username: 'ああああ',
+      screenName: 'foobar',
+      fullText: '@gensosenkyo ほげ\n#幻水総選挙推し台詞\n#幻水総選挙2021',
+      isRetweet: 'false',
+      url: 'https://twitter.com/foobar/status/1396432867352809725',
+      tweetedAt: '2021/05/23(日) 12:54:32',
+      mediaExists: 'false',
+      isPublic: 'true',
+      isMentionedToGssAdmin: 'true',
     },
   ])
   const [isNowLoading, setIsNowLoading] = useState(false)
-  const [nowLoadingText, setNowLoadingText] = useState('NowLoading...')
+  const [nowLoadingText, setNowLoadingText] = useState('')
   const [submitValue, setSubmitValue] = useState('')
+  const [searchedUsername, setSearchedUsername] = useState('初期名前')
+  const [searchedScreenName, setSearchedScreenName] =
+    useState('hyper_shangrila')
 
   const changeSubmitValue = (event: any) => {
     setSubmitValue(event.target.value)
@@ -28,6 +38,7 @@ function App() {
   // FIXME: 命名の変更
   const letsSearch = (event: any) => {
     setIsNowLoading(true)
+    setNowLoadingText('ローディング中です...')
 
     const apiUri: any = process.env.REACT_APP_API_URI
     axios
@@ -39,7 +50,9 @@ function App() {
       .then((response) => {
         setResultArray(response.data)
         setIsNowLoading(false)
-
+        console.log(response.data)
+        setSearchedUsername(response.data[0].username)
+        setSearchedScreenName(response.data[0].screenName)
         if (!isNowLoading) {
           // ここで GIF アニメを出し分ければいい
           setNowLoadingText('Loading is completed.')
@@ -58,13 +71,23 @@ function App() {
       {nowLoadingText}
       <form onSubmit={letsSearch}>
         <label>
-          アカウント名(@hoge, @は省略可能)を入れてください。
+          推し台詞: アカウント名(@hoge, @は省略可能)を入れてください。
           <input type="text" value={submitValue} onChange={changeSubmitValue} />
         </label>
         <input type="submit" value="Submit" />{' '}
       </form>
+      結果: {searchedUsername} さん (@{searchedScreenName})
+      <br />
       {resultArray.map((e) => {
-        return `結果: @${e.screenName} さん / tweetId: ${e.tweetId}`
+        return (
+          <div key={e.id}>
+            <div>
+              {e.username} さん (@{e.screenName}) の結果は次の通りです / url:{' '}
+              {e.url}
+              <br /> <br />
+            </div>
+          </div>
+        )
       })}
     </div>
   )
