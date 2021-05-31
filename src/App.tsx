@@ -32,6 +32,8 @@ function App() {
   const [searchedUsername, setSearchedUsername] = useState('初期名前')
   const [searchedScreenName, setSearchedScreenName] =
     useState('hyper_shangrila')
+  const [waitingTweetIsShownText, setWaitingTweetIsShownText] =
+    useState('Waiting...')
 
   const changeSubmitValue = (event: any) => {
     setSubmitValue(event.target.value)
@@ -41,6 +43,8 @@ function App() {
   const letsSearch = (event: any) => {
     setIsNowLoading(true)
     setNowLoadingText('ローディング中です...')
+    setSearchedUsername('')
+    setSearchedScreenName('')
 
     const apiUri: any = process.env.REACT_APP_API_URI
     axios
@@ -53,12 +57,15 @@ function App() {
         setResultArray(response.data)
         setIsNowLoading(false)
         console.log(response.data)
-        setSearchedUsername(response.data[0].username)
-        setSearchedScreenName(response.data[0].screenName)
+        if (response.data[0]) {
+          setSearchedUsername(response.data[0].username)
+          setSearchedScreenName(response.data[0].screenName)
+        }
         if (!isNowLoading) {
           // ここで GIF アニメを出し分ければいい
           setNowLoadingText('Loading is completed.')
         }
+        setWaitingTweetIsShownText('ウェイティング……')
       })
 
     event.preventDefault()
@@ -69,6 +76,12 @@ function App() {
 
   return (
     <div className="App">
+      <div className="ui menu">
+        <div className="header item">Our Company</div>
+        <a className="item active">About Us</a>
+        <a className="item">Jobs</a>
+        <a className="item">Locations</a>
+      </div>{' '}
       <img className="ui fluid image" src={logo}></img>
       {nowLoadingText}
       {/* 画面が一度 top に戻るのはあんまイケてない気もする */}
@@ -84,7 +97,11 @@ function App() {
       {resultArray.map((e) => {
         return (
           <div key={e.id}>
-            <Tweet tweetId={e.tweetId} />
+            <div>{waitingTweetIsShownText}</div>
+            <Tweet
+              tweetId={e.tweetId}
+              onLoad={() => setWaitingTweetIsShownText('')}
+            />
           </div>
         )
       })}
