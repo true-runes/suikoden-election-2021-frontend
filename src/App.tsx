@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import 'semantic-ui-css/semantic.min.css'
 import axios from 'axios'
 import { Tweet } from 'react-twitter-widgets'
-import { BrowserRouter, Route, Switch, Link } from 'react-router-dom'
+import { BrowserRouter, Link } from 'react-router-dom'
 
 import logo from './images/header.jpg'
 import './App.css'
@@ -89,12 +89,7 @@ function App() {
         )
       })}
       <BrowserRouter>
-        <Switch>
-          <Route exact path="/" component={App} />
-          <Route path="/login" component={App} />
-          <Route path="/todo" component={App} />
-        </Switch>
-        <Link to="/">Back To Top</Link>
+        <Link to="/">Back To Top</Link>{' '}
       </BrowserRouter>
     </div>
   )
