@@ -1,19 +1,53 @@
 import React, { useState } from 'react'
+import { BrowserRouter, Link as ReachLink } from 'react-router-dom'
+
+import { Container } from '@chakra-ui/react'
+import { Icon } from '@chakra-ui/react'
+import { IconButton } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
+import { Text } from '@chakra-ui/react'
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
+import { FormControl, FormLabel } from '@chakra-ui/react'
+import { Grid } from '@chakra-ui/react'
+import { Heading } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
+import { Link as ChakraLink } from '@chakra-ui/react'
+import { Button } from '@chakra-ui/react'
+import { Flex } from '@chakra-ui/react'
+import { Menu, MenuButton } from '@chakra-ui/react'
+import { Input } from '@chakra-ui/react'
+import { useDisclosure } from '@chakra-ui/react'
+import {
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+} from '@chakra-ui/react'
+
+import { ExternalLinkIcon, HamburgerIcon } from '@chakra-ui/icons'
+import { FcSearch } from 'react-icons/fc'
+import { FaTwitter } from 'react-icons/fa'
+import { CgWebsite } from 'react-icons/cg'
+
 import axios from 'axios'
 import { Tweet } from 'react-twitter-widgets'
-import { BrowserRouter, Link } from 'react-router-dom'
-import { NowLoading } from './NowLoading'
 
-import logo from './images/header.jpg'
 import './App.css'
+import logo from './images/header.jpg'
+import { NowLoading } from './NowLoading'
+import { SearchTweetsStatus } from './SearchTweetsStatus'
 
 // TODO: .eslintrc.json で無理矢理 OFF にしたものは ON で通るようにする
 // "@typescript-eslint/no-explicit-any": "off",
 // "@typescript-eslint/explicit-module-boundary-types": "off"
+
 function App() {
-  const [resultArray, setResultArray] = useState([
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  const [apiResponses, setApiResponses] = useState([
     {
-      id: 1,
+      id: 0,
       tweetId: '',
       username: '',
       screenName: '',
@@ -26,169 +60,369 @@ function App() {
       isMentionedToGssAdmin: false,
     },
   ])
-  const [submitValue, setSubmitValue] = useState('')
-  const [isShownNowLoading, setIsShowNowLoading] = useState(false)
-  const [searchedUsername, setSearchedUsername] = useState('')
+  const [alreadyFetchedApi, setAlreadyFetchedApi] = useState(false)
+  const [searchResultStatus, setSearchResultStatus] = useState('init')
+  const [numberOfFoundTweets, setNumberOfFoundTweets] = useState(0)
+  const [submittedScreenName, setSubmittedScreenName] = useState('')
+  const [isShownNowLoadingGifIcon, setIsShowNowLoadingGifIcon] = useState(false)
   const [searchedScreenName, setSearchedScreenName] = useState('')
+  const [searchedUsername, setSearchedUsername] = useState('')
   const [waitingTweetIsShownText, setWaitingTweetIsShownText] = useState(false)
+  // 0 が推し台詞、1 がお題小説
+  const [tabIndex, setTabIndex] = useState(0)
 
-  const changeSubmitValue = (event: any) => {
-    setSubmitValue(event.target.value)
-  }
-  const changeSubmitValue2 = (event: any) => {
-    setSubmitValue2(event.target.value)
+  const changeSubmittedScreenName = (event: any) => {
+    setSubmittedScreenName(event.target.value)
   }
 
-  // FIXME: 命名の変更
-  const letsSearch = (event: any) => {
-    setIsShowNowLoading(true)
-    setSearchedUsername('')
+  const searchTweets = (event: any) => {
+    console.log(searchedUsername)
+    console.log(searchedScreenName)
+
+    // 必要に応じて各種の値を初期化する
+    setAlreadyFetchedApi(true)
+    setSearchResultStatus('init')
+    setNumberOfFoundTweets(0)
+    setIsShowNowLoadingGifIcon(true)
     setSearchedScreenName('')
+    setSearchedUsername('')
 
-    const apiUri: any = process.env.REACT_APP_API_URI
+    let apiUri: any
+    if (tabIndex === 0) {
+      apiUri = process.env.REACT_APP_API_URI_RECOMMENDED_QUOTES
+    } else {
+      apiUri = process.env.REACT_APP_API_URI_THEME_NOVELS
+    }
+
     axios
       .get(apiUri, {
         params: {
-          screen_name: submitValue,
+          screen_name: submittedScreenName,
         },
       })
       .then((response) => {
         setWaitingTweetIsShownText(true)
-        setResultArray(response.data)
+        setApiResponses(response.data)
 
         if (response.data[0]) {
-          setSearchedUsername(response.data[0].username)
+          setSearchResultStatus('found')
+          setNumberOfFoundTweets(response.data.length)
           setSearchedScreenName(response.data[0].screenName)
+          setSearchedUsername(response.data[0].username)
+        } else {
+          setSearchResultStatus('notFound')
         }
 
-        setIsShowNowLoading(false)
+        setIsShowNowLoadingGifIcon(false)
       })
 
     event.preventDefault()
-
-    // FIXME: react-router
-    // location.href = 'http://localhost:3000/?FOO=BAR'
-  }
-
-  const [resultArray2, setResultArray2] = useState([
-    {
-      id: 1,
-      tweetId: '',
-      username: '',
-      screenName: '',
-      fullText: '',
-      isRetweet: false,
-      url: '',
-      tweetedAt: '',
-      mediaExists: '',
-      isPublic: false,
-      isMentionedToGssAdmin: false,
-    },
-  ])
-  const [submitValue2, setSubmitValue2] = useState('')
-  const [isShownNowLoading2, setIsShowNowLoading2] = useState(false)
-  const [searchedUsername2, setSearchedUsername2] = useState('')
-  const [searchedScreenName2, setSearchedScreenName2] = useState('')
-  const [waitingTweetIsShownText2, setWaitingTweetIsShownText2] =
-    useState(false)
-
-  const letsSearch2 = (event: any) => {
-    setIsShowNowLoading2(true)
-    setSearchedUsername2('')
-    setSearchedScreenName2('')
-
-    const apiUri: any = process.env.REACT_APP_API_URI2
-    axios
-      .get(apiUri, {
-        params: {
-          screen_name: submitValue2,
-        },
-      })
-      .then((response) => {
-        setWaitingTweetIsShownText2(true)
-        setResultArray2(response.data)
-
-        if (response.data[0]) {
-          setSearchedUsername2(response.data[0].username)
-          setSearchedScreenName2(response.data[0].screenName)
-        }
-
-        setIsShowNowLoading2(false)
-      })
-
-    event.preventDefault()
-
-    // FIXME: react-router
-    // location.href = 'http://localhost:3000/?FOO=BAR'
   }
 
   return (
     <div className="App">
-      <div className="ui menu">
-        <div className="header item">Our Company</div>
-        <a className="item active">About Us</a>
-        <a className="item">Jobs</a>
-        <a className="item">Locations</a>
-      </div>{' '}
+      <Flex bg="#242222" style={{ position: 'sticky', top: 0, zIndex: 1000 }}>
+        <Box p={2}>
+          <Menu>
+            <MenuButton
+              color="white"
+              _active={{
+                color: 'white',
+              }}
+              _hover={{
+                bg: '242222',
+                color: 'white',
+                stroke: 'white',
+              }}
+              onClick={onOpen}
+              as={IconButton}
+              aria-label="Options"
+              icon={<HamburgerIcon />}
+              variant="outline"
+            />
+          </Menu>
+        </Box>
+        <Box p={4}>
+          <Text color="#FFFFFF">
+            <BrowserRouter>
+              <ChakraLink
+                as={ReachLink}
+                to="/"
+                style={{ textDecoration: 'none' }}
+              >
+                幻水総選挙2021
+              </ChakraLink>
+            </BrowserRouter>
+          </Text>
+        </Box>
+      </Flex>
+      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
+        <DrawerOverlay />
+        <DrawerContent style={{ zIndex: 1001, backgroundColor: '#f4f7f9' }}>
+          <DrawerHeader borderBottomWidth="2px">
+            <Box p={2}>幻水総選挙2021</Box>
+          </DrawerHeader>
+          <DrawerBody>
+            <Box p={2}>
+              <Icon as={FcSearch} style={{ margin: '0 10px 0 0' }} />
+              投票チェック（準備中）
+            </Box>
+            <Box p={2}>
+              <Icon
+                as={FaTwitter}
+                style={{ margin: '0 10px 0 0' }}
+                color="#1da1f2"
+              />
+              <ChakraLink href="https://twitter.com/gensosenkyo" isExternal>
+                幻水総選挙アカウント (@gensosenkyo)
+                <ExternalLinkIcon mx="2px" />
+              </ChakraLink>
+            </Box>
+            <hr style={{ margin: '10px 0' }} />
+            <Box p={2}>
+              <Heading as="h5" size="sm">
+                過去の総選挙
+              </Heading>
+            </Box>
+            <Box p={2}>
+              <ChakraLink
+                href="https://election-2020.suikoden.info/"
+                isExternal
+              >
+                <Icon
+                  as={CgWebsite}
+                  style={{ margin: '0 10px 0 0' }}
+                  color="#1E90FF"
+                />
+                幻水総選挙2020
+                <ExternalLinkIcon mx="2px" />
+              </ChakraLink>
+            </Box>
+            <Box p={2}>
+              <ChakraLink
+                href="https://election-2019.suikoden.info/"
+                isExternal
+              >
+                <Icon
+                  as={CgWebsite}
+                  style={{ margin: '0 10px 0 0' }}
+                  color="#1E90FF"
+                />
+                幻水総選挙2019
+                <ExternalLinkIcon mx="2px" />
+              </ChakraLink>
+            </Box>
+            <Box p={2}>
+              <ChakraLink
+                href="https://election-2018.suikoden.info/"
+                isExternal
+              >
+                <Icon
+                  as={CgWebsite}
+                  style={{ margin: '0 10px 0 0' }}
+                  color="#1E90FF"
+                />
+                幻水総選挙2018
+                <ExternalLinkIcon mx="2px" />
+              </ChakraLink>
+            </Box>
+            <Box p={2}>
+              <ChakraLink
+                href="https://election-2017.suikoden.info/"
+                isExternal
+              >
+                <Icon
+                  as={CgWebsite}
+                  style={{ margin: '0 10px 0 0' }}
+                  color="#1E90FF"
+                />
+                幻水総選挙2017
+                <ExternalLinkIcon mx="2px" />
+              </ChakraLink>
+            </Box>
+            <Box p={2}>
+              <ChakraLink
+                href="https://election-2016.suikoden.info/"
+                isExternal
+              >
+                <Icon
+                  as={CgWebsite}
+                  style={{ margin: '0 10px 0 0' }}
+                  color="#1E90FF"
+                />
+                幻水総選挙2016
+                <ExternalLinkIcon mx="2px" />
+              </ChakraLink>
+            </Box>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
       <img className="ui fluid image" src={logo}></img>
-      <form onSubmit={letsSearch}>
-        <label>
-          推し台詞: アカウント名(@hoge, @は省略可能)を入れてください。
-          <br />
-          <br />
-          <input type="text" value={submitValue} onChange={changeSubmitValue} />
-        </label>
-        <input type="submit" value="Submit" />{' '}
-      </form>
-      結果: {searchedUsername} さん (@{searchedScreenName})
-      <br />
-      {isShownNowLoading ? <NowLoading /> : ''}
-      {isShownNowLoading
-        ? ''
-        : resultArray.map((e) => {
-            return (
-              <div key={e.id}>
-                <div>{waitingTweetIsShownText}</div>
-                {waitingTweetIsShownText ? <NowLoading /> : ''}
-                <Tweet
-                  tweetId={e.tweetId}
-                  onLoad={() => setWaitingTweetIsShownText(false)}
-                />
-              </div>
-            )
-          })}
-      <form onSubmit={letsSearch2}>
-        <label>
-          お題小説: アカウント名(@hoge, @は省略可能)を入れてください。
-          <br />
-          <br />
-          <input
-            type="text"
-            value={submitValue2}
-            onChange={changeSubmitValue2}
-          />
-        </label>
-        <input type="submit" value="Submit" />{' '}
-      </form>
-      結果: {searchedUsername2} さん (@{searchedScreenName2})
-      {isShownNowLoading2 ? <NowLoading /> : ''}
-      {isShownNowLoading2
-        ? ''
-        : resultArray2.map((e) => {
-            return (
-              <div key={e.id}>
-                <div>{waitingTweetIsShownText2}</div>
-                {waitingTweetIsShownText2 ? <NowLoading /> : ''}
-                <Tweet
-                  tweetId={e.tweetId}
-                  onLoad={() => setWaitingTweetIsShownText2(false)}
-                />
-              </div>
-            )
-          })}
-      <BrowserRouter>
-        <Link to="/">Back To Top</Link>{' '}
-      </BrowserRouter>
+      <Container maxW="container.xl">
+        <Box p={1}></Box>
+        <Box p={2}>
+          <Stack shadow="md" borderWidth="1px">
+            <Box p={4}>
+              <Text align="left">
+                ※<span style={{ fontWeight: 'bold' }}>幻水総選挙</span>
+                は、ファンによる非公式の企画です。公式ならびに既存の企業様とは一切関係ありません。
+              </Text>{' '}
+            </Box>
+          </Stack>
+        </Box>
+        <Box p={2}>
+          <Stack shadow="md" borderWidth="1px">
+            <Box p={2}>
+              <Grid>
+                <Heading as="h3" size="lg">
+                  投票期間
+                </Heading>
+              </Grid>
+            </Box>
+            <Box p={2}>
+              <Grid>2021年6月11日（金）21:00 から</Grid>
+              <Grid>2021年6月13日（日）12:00 まで</Grid>
+            </Box>{' '}
+          </Stack>
+        </Box>
+        <Box p={2}>
+          <Stack shadow="md" borderWidth="1px">
+            <Box p={2}>
+              <Grid>
+                <Heading as="h3" size="lg">
+                  投票方法など
+                </Heading>
+              </Grid>
+            </Box>
+            <Box p={2}>
+              <ChakraLink href="https://min.togetter.com/e75K0EY" isExternal>
+                幻水総選挙2021について (min.t のまとめ){' '}
+                <ExternalLinkIcon mx="2px" />
+              </ChakraLink>{' '}
+            </Box>{' '}
+          </Stack>
+        </Box>
+        <Box p={2}>
+          <Stack shadow="md" borderWidth="1px">
+            <Box p={2}>
+              <Grid>
+                <Heading as="h3" size="lg">
+                  投稿チェック
+                </Heading>
+              </Grid>
+            </Box>
+            <Box p={2}>
+              <Tabs
+                isFitted
+                variant="line"
+                onChange={(index) => setTabIndex(index)}
+              >
+                <TabList mb="0.3em">
+                  <Tab
+                    _selected={{
+                      color: 'white',
+                      bg: 'blue.500',
+                    }}
+                  >
+                    推し台詞
+                  </Tab>
+                  <Tab
+                    _selected={{
+                      color: 'white',
+                      bg: 'blue.500',
+                    }}
+                  >
+                    お題小説
+                  </Tab>
+                </TabList>
+                <TabPanels>
+                  <TabPanel>
+                    <Heading as="h4" size="md">
+                      推し台詞 投稿チェック
+                    </Heading>
+                    <Box p={1}>（#幻水総選挙推し台詞）</Box>
+                  </TabPanel>
+                  <TabPanel>
+                    <Heading as="h4" size="md">
+                      お題小説 投稿チェック
+                    </Heading>
+                    <Box p={1}>（#幻水総選挙お題小説）</Box>
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            </Box>
+            <form onSubmit={searchTweets}>
+              <Container style={{ margin: '-15px 0 0 0' }}>
+                <FormControl id="email">
+                  <FormLabel>
+                    <Box p={2}>
+                      チェックしたいユーザー名を入れてください（@は省略可能）。
+                    </Box>
+                  </FormLabel>
+                  <Box p={2}>
+                    <Input
+                      type="text"
+                      value={submittedScreenName}
+                      onChange={changeSubmittedScreenName}
+                      placeholder="@gensosenkyo（@は省略可能）"
+                    />
+                  </Box>
+                  <Box p={2}>
+                    <Button
+                      type="submit"
+                      value="Submit"
+                      style={{ margin: '0 0 10px 0' }}
+                    >
+                      検索する
+                    </Button>
+                  </Box>
+                </FormControl>
+              </Container>
+            </form>
+            {searchResultStatus === 'init' ? (
+              ''
+            ) : (
+              <SearchTweetsStatus
+                status={searchResultStatus}
+                numberOfFoundTweets={numberOfFoundTweets}
+                searchedScreenName={searchedScreenName}
+                searchedUsername={searchedUsername}
+              />
+            )}
+            {isShownNowLoadingGifIcon ? <NowLoading area="isFoundArea" /> : ''}
+            {isShownNowLoadingGifIcon || !alreadyFetchedApi
+              ? ''
+              : apiResponses.map((e) => {
+                  return (
+                    <div key={e.id}>
+                      <Container>
+                        <div>{waitingTweetIsShownText}</div>
+                        {waitingTweetIsShownText ? (
+                          <NowLoading area="tweetsArea" />
+                        ) : (
+                          ''
+                        )}
+                        <Tweet
+                          tweetId={e.tweetId}
+                          onLoad={() => setWaitingTweetIsShownText(false)}
+                        />
+                      </Container>
+                    </div>
+                  )
+                })}
+          </Stack>
+        </Box>
+        <Box p={2}>
+          <hr></hr>
+        </Box>
+        <Box p={2}>
+          <ChakraLink href="https://twitter.com/gensosenkyo" isExternal>
+            幻水総選挙2021 (@gensosenkyo)
+            <ExternalLinkIcon mx="2px" />
+          </ChakraLink>
+        </Box>{' '}
+        <Box p={2}></Box>
+      </Container>{' '}
     </div>
   )
 }
