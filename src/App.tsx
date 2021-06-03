@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { Container } from '@chakra-ui/react'
 import { Icon } from '@chakra-ui/react'
 import { IconButton } from '@chakra-ui/react'
+import { Alert, AlertIcon } from '@chakra-ui/react' // import {
 import { Box } from '@chakra-ui/react'
 import { Text } from '@chakra-ui/react'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
@@ -386,13 +387,20 @@ function App() {
                     />
                   </Box>
                   <Box p={2}>
-                    <Button
-                      type="submit"
-                      value="Submit"
-                      style={{ margin: '0 0 10px 0' }}
-                    >
+                    <Button type="submit" value="Submit">
                       検索する
                     </Button>
+                  </Box>
+                  <Box p={2} style={{ margin: '0 0 5px 0' }}>
+                    <Alert status="info">
+                      <AlertIcon />
+                      <Text align="left">
+                        <p>・検索できるのは公開アカウントのツイートのみです</p>
+                        <p>
+                          ・検索結果にツイートが表示されれば、応募は完了しています
+                        </p>
+                      </Text>
+                    </Alert>
                   </Box>
                 </FormControl>
               </Container>
