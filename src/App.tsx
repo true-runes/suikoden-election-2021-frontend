@@ -145,11 +145,7 @@ function App() {
         <Box p={4}>
           <Text color="#FFFFFF">
             <BrowserRouter>
-              <ChakraLink
-                as={ReachLink}
-                to="/"
-                style={{ textDecoration: 'none' }}
-              >
+              <ChakraLink href="/" style={{ textDecoration: 'none' }}>
                 幻水総選挙2021
               </ChakraLink>
             </BrowserRouter>
@@ -352,7 +348,7 @@ function App() {
               </Tabs>
             </Box>
             <form onSubmit={searchTweets}>
-              <Container style={{ margin: '-15px 0 0 0' }}>
+              <Container maxW="container.xl" style={{ margin: '-15px 0 0 0' }}>
                 <FormControl id="email">
                   <FormLabel>
                     <Box p={2}>
