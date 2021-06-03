@@ -9,18 +9,17 @@ export const SearchTweetsNotFoundNotice = () => {
         <AlertIcon />
         <Box p={2} align="left">
           <p>ツイートが見つかりませんでした。</p>
-          <br />
           <p>
-            投稿したにも関わらずこのメッセージが出る場合には、
+            ご自身がなされたツイートが見つからない場合には
             <a
               href="https://twitter.com/gensosenkyo"
               target="_blank"
               rel="noreferrer"
               style={{ textDecoration: 'underline' }}
             >
-              主催までご連絡下さい
+              主催まで
             </a>
-            。
+            ご連絡下さい。
           </p>
         </Box>
       </Alert>

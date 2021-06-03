@@ -267,7 +267,7 @@ function App() {
           <Stack shadow="md" borderWidth="1px">
             <Box p={4}>
               <Text align="left">
-                ※<span style={{ fontWeight: 'bold' }}>幻水総選挙</span>
+                ※<span style={{ fontWeight: 'bold' }}>「幻水総選挙」</span>
                 は、ファンによる非公式の企画です。公式ならびに既存の企業様とは一切関係ありません。
               </Text>{' '}
             </Box>
@@ -373,7 +373,7 @@ function App() {
                 <FormControl id="email">
                   <FormLabel>
                     <Box p={2}>
-                      チェックしたいユーザー名を入れてください（@は省略可能）。
+                      ツイートのチェックをしたいユーザー名を入れてください（@は省略可能）。
                     </Box>
                   </FormLabel>
                   <Box p={2}>

@@ -17,7 +17,7 @@ export const SearchTweetsFoundNotice = (props: any) => {
       <Alert status="info">
         <AlertIcon />
         <Text align="left">
-          削除済みツイートがある場合は上記の数字が正しくない場合がありますが、集計は正しく行われています。
+          削除済みツイートがある場合には上記の数字が正しくないことがありますが、集計は正しく行われています。
         </Text>
       </Alert>{' '}
     </Box>
