@@ -11,6 +11,9 @@ updates:
       - dependency-name: '@typescript-eslint/eslint-plugin'
         versions:
           - '>4.25.0'
+      - dependency-name: 'node-sass'
+        versions:
+          - '>4'
     # - dependency-name: webpack
     #   versions:
     #   - ">4.44.2"
