@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { BrowserRouter, Link as ReachLink } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 
 import { Container } from '@chakra-ui/react'
 import { Icon } from '@chakra-ui/react'
