@@ -17,16 +17,32 @@ export const SearchTweetsFoundNotice = (props: any) => {
       <Alert status="info">
         <AlertIcon />
         <Text align="left">
-          検索結果にツイートが表示されれば、応募は完了しています。
+          削除済みツイートがある場合には上記の数字が正しくないことがありますが、集計は正しく行われています。
         </Text>
       </Alert>
       <Box p={2}></Box>
       <Alert status="info">
         <AlertIcon />
         <Text align="left">
-          削除済みツイートがある場合には上記の数字が正しくないことがありますが、集計は正しく行われています。
+          検索結果にツイートが表示されれば、そのツイートの応募は完了しています。
         </Text>
-      </Alert>{' '}
+      </Alert>
+      <Box p={2}></Box>
+      <Alert status="info">
+        <AlertIcon />
+        <Text align="left">
+          ご自身のツイートの全てが表示されていない場合は
+          <a
+            href="https://twitter.com/gensosenkyo"
+            target="_blank"
+            rel="noreferrer"
+            style={{ textDecoration: 'underline' }}
+          >
+            主催宛DM
+          </a>
+          でご連絡下さい。
+        </Text>
+      </Alert>
     </Box>
   )
 }
