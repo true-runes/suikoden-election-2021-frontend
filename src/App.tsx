@@ -413,6 +413,7 @@ function App() {
                 numberOfFoundTweets={numberOfFoundTweets}
                 searchedScreenName={searchedScreenName}
                 searchedUsername={searchedUsername}
+                tabIndex={tabIndex}
               />
             )}
             {isShownNowLoadingGifIcon ? <NowLoading area="isFoundArea" /> : ''}
