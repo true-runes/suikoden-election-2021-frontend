@@ -13,6 +13,7 @@ export const SearchTweetsStatus = (props: any) => {
           numberOfFoundTweets={props.numberOfFoundTweets}
           searchedScreenName={props.searchedScreenName}
           searchedUsername={props.searchedUsername}
+          tabIndex={props.tabIndex}
         />
       )
     } else if (props.status === 'notFound') {

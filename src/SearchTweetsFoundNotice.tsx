@@ -5,6 +5,9 @@ import { Alert, AlertIcon } from '@chakra-ui/react' // import {
 import { Text } from '@chakra-ui/react'
 
 export const SearchTweetsFoundNotice = (props: any) => {
+  // ハードコーディングになっているのは良くない
+  const tabNamesByTabIndex = ['推し台詞', 'お題小説']
+
   return (
     <Container maxW="container.xl">
       <hr style={{ margin: '0 0 13px 0' }} />
@@ -28,7 +31,8 @@ export const SearchTweetsFoundNotice = (props: any) => {
         <Alert status="info">
           <AlertIcon />
           <Text align="left">
-            ご自身のツイートの全てが表示されていない場合は
+            投稿した{tabNamesByTabIndex[props.tabIndex]}
+            のうち、表示されないツイートがある場合は、
             <a
               href="https://twitter.com/gensosenkyo"
               target="_blank"
