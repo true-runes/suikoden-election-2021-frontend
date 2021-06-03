@@ -131,7 +131,6 @@ function App() {
                 color: 'white',
               }}
               _hover={{
-                bg: '242222',
                 color: 'white',
                 stroke: 'white',
               }}
@@ -140,6 +139,7 @@ function App() {
               aria-label="Options"
               icon={<HamburgerIcon />}
               variant="outline"
+              borderStyle="solid"
             />
           </Menu>
         </Box>
@@ -158,6 +158,7 @@ function App() {
         placement="left"
         onClose={onClose}
         isOpen={isOpen}
+        returnFocusOnClose={false}
       >
         <DrawerOverlay />
         <DrawerContent style={{ zIndex: 1001, backgroundColor: '#f4f7f9' }}>
