@@ -17,9 +17,9 @@ export const SearchTweetsNotFoundNotice = () => {
               rel="noreferrer"
               style={{ textDecoration: 'underline' }}
             >
-              主催まで
+              主催宛DM
             </a>
-            ご連絡下さい。
+            でご連絡下さい。
           </p>
         </Box>
       </Alert>
