@@ -152,7 +152,12 @@ function App() {
           </Text>
         </Box>
       </Flex>
-      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
+      <Drawer
+        autoFocus={false}
+        placement="left"
+        onClose={onClose}
+        isOpen={isOpen}
+      >
         <DrawerOverlay />
         <DrawerContent style={{ zIndex: 1001, backgroundColor: '#f4f7f9' }}>
           <DrawerHeader borderBottomWidth="2px">
