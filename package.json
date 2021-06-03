@@ -41,6 +41,7 @@
     "framer-motion": "^4.1.17",
     "node-sass": "4.14.1",
     "prettier": "^2.3.0",
+    "react-countdown": "^2.3.2",
     "react-icons": "^4.2.0",
     "react-router-dom": "^5.2.0",
     "react-twitter-widgets": "^1.10.0",
