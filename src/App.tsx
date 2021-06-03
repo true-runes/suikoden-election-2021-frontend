@@ -33,7 +33,7 @@ import { CgWebsite } from 'react-icons/cg'
 import axios from 'axios'
 import { Tweet } from 'react-twitter-widgets'
 
-import './App.css'
+import './App.scss'
 import logo from './images/header.jpg'
 import { NowLoading } from './NowLoading'
 import { SearchTweetsStatus } from './SearchTweetsStatus'
