@@ -1,19 +1,19 @@
 version: 2
 updates:
-- package-ecosystem: npm
-  directory: "/"
-  schedule:
-    interval: daily
-    time: "03:00"
-    timezone: Asia/Tokyo
-  open-pull-requests-limit: 10
-  # ignore:
-  # - dependency-name: qs
-  #   versions:
-  #   - 6.10.0
-  # - dependency-name: webpack
-  #   versions:
-  #   - ">4.44.2"
-  # - dependency-name: webpack-merge
-  #   versions:
-  #   - ">4.2.2"
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: daily
+      time: '03:00'
+      timezone: Asia/Tokyo
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: '@typescript-eslint/eslint-plugin'
+        versions:
+          - '>4.25.0'
+    # - dependency-name: webpack
+    #   versions:
+    #   - ">4.44.2"
+    # - dependency-name: webpack-merge
+    #   versions:
+    #   - ">4.2.2"
