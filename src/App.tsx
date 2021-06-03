@@ -32,6 +32,7 @@ import { CgWebsite } from 'react-icons/cg'
 
 import axios from 'axios'
 import { Tweet } from 'react-twitter-widgets'
+import Countdown, { zeroPad } from 'react-countdown'
 
 import './App.scss'
 import logo from './images/header.jpg'
@@ -284,6 +285,20 @@ function App() {
               <Grid>2021年6月11日（金）21:00 から</Grid>
               <Grid>2021年6月13日（日）12:00 まで</Grid>
             </Box>{' '}
+            <Box p={2}>
+              投票開始まであと{' '}
+              <Countdown
+                date="2021-06-11T21:00:00+09:00"
+                intervalDelay={0}
+                precision={3}
+                renderer={(props) => (
+                  <span>
+                    {props.days} 日 と {zeroPad(props.hours)}:
+                    {zeroPad(props.minutes)}:{zeroPad(props.seconds)}
+                  </span>
+                )}
+              />
+            </Box>
           </Stack>
         </Box>
         <Box p={2}>
