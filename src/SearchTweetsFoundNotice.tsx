@@ -17,6 +17,13 @@ export const SearchTweetsFoundNotice = (props: any) => {
       <Alert status="info">
         <AlertIcon />
         <Text align="left">
+          検索結果にツイートが表示されれば、応募は完了しています。
+        </Text>
+      </Alert>
+      <Box p={2}></Box>
+      <Alert status="info">
+        <AlertIcon />
+        <Text align="left">
           削除済みツイートがある場合には上記の数字が正しくないことがありますが、集計は正しく行われています。
         </Text>
       </Alert>{' '}
