@@ -396,9 +396,6 @@ function App() {
                       <AlertIcon />
                       <Text align="left">
                         <p>検索できるのは公開アカウントのツイートのみです。</p>
-                        <p>
-                          検索結果にツイートが表示されれば、そのツイートの応募は完了しています。
-                        </p>
                       </Text>
                     </Alert>
                   </Box>
