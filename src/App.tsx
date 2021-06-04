@@ -90,10 +90,11 @@ function App() {
     setSearchedUsername('')
 
     let apiUri: any
+    // ハードコーディングは避ける
     if (tabIndex === 0) {
-      apiUri = process.env.REACT_APP_API_URI_RECOMMENDED_QUOTES
-    } else {
       apiUri = process.env.REACT_APP_API_URI_THEME_NOVELS
+    } else {
+      apiUri = process.env.REACT_APP_API_URI_RECOMMENDED_QUOTES
     }
 
     axios
@@ -268,7 +269,7 @@ function App() {
           <Stack shadow="md" borderWidth="1px">
             <Box p={4}>
               <Text align="left">
-                ※<span style={{ fontWeight: 'bold' }}>「幻水総選挙」</span>
+                ※<span style={{ fontWeight: 'bold' }}>幻水総選挙</span>
                 は、ファンによる非公式の企画です。公式ならびに既存の企業様とは一切関係ありません。
               </Text>{' '}
             </Box>
@@ -343,7 +344,7 @@ function App() {
                       bg: 'blue.500',
                     }}
                   >
-                    推し台詞
+                    お題小説
                   </Tab>
                   <Tab
                     _selected={{
@@ -351,21 +352,21 @@ function App() {
                       bg: 'blue.500',
                     }}
                   >
-                    お題小説
+                    推し台詞
                   </Tab>
                 </TabList>
                 <TabPanels>
                   <TabPanel>
                     <Heading as="h4" size="md">
-                      推し台詞 応募チェック
-                    </Heading>
-                    <Box p={1}>（#幻水総選挙推し台詞）</Box>
-                  </TabPanel>
-                  <TabPanel>
-                    <Heading as="h4" size="md">
                       お題小説 応募チェック
                     </Heading>
                     <Box p={1}>（#幻水総選挙お題小説）</Box>
+                  </TabPanel>
+                  <TabPanel>
+                    <Heading as="h4" size="md">
+                      推し台詞 応募チェック
+                    </Heading>
+                    <Box p={1}>（#幻水総選挙推し台詞）</Box>
                   </TabPanel>
                 </TabPanels>
               </Tabs>
