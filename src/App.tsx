@@ -70,7 +70,7 @@ function App() {
   const [searchedScreenName, setSearchedScreenName] = useState('')
   const [searchedUsername, setSearchedUsername] = useState('')
   const [waitingTweetIsShownText, setWaitingTweetIsShownText] = useState(false)
-  // 0 が推し台詞、1 がお題小説
+  // 0 が推し台詞、1 がお題小説yarn
   const [tabIndex, setTabIndex] = useState(0)
 
   const changeSubmittedScreenName = (event: any) => {
@@ -284,9 +284,9 @@ function App() {
               </Grid>
             </Box>
             <Box p={2}>
-              <Grid>（日本時間）</Grid>
               <Grid>2021年6月11日（金）夜 21:00 から</Grid>
               <Grid>2021年6月13日（日）昼 12:00 まで</Grid>
+              <Grid>（日本時間）</Grid>
             </Box>{' '}
             <Box p={2}>
               投票開始まであと{' '}
