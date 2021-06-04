@@ -32,7 +32,7 @@ export const SearchTweetsFoundNotice = (props: any) => {
           <AlertIcon />
           <Text align="left">
             投稿した{tabNamesByTabIndex[props.tabIndex]}
-            のうち、表示されないツイートがある場合は
+            のうち、表示されないツイートがある場合は、
             <a
               href="https://twitter.com/gensosenkyo"
               target="_blank"
@@ -41,7 +41,7 @@ export const SearchTweetsFoundNotice = (props: any) => {
             >
               主催宛DM
             </a>
-            でご連絡下さい。
+            で該当ツイートをお送り下さい。
           </Text>
         </Alert>
       </Box>
