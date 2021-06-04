@@ -17,7 +17,8 @@ export const SearchTweetsFoundNotice = (props: any) => {
           <AlertIcon />
           <Text align="left">
             {props.searchedUsername} (@{props.searchedScreenName})
-            さんのツイートが {props.numberOfFoundTweets}件 見つかりました。
+            さんの受理された{tabNamesByTabIndex[props.tabIndex]}
+            は下記の通りです。
           </Text>
         </Alert>
         <Box p={2}></Box>
