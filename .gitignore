@@ -9,7 +9,8 @@
 /coverage
 
 # production
-/build
+# Netlify のビルド時間を消費しないように、予めビルドしてから push する
+# /build
 
 # misc
 .DS_Store
