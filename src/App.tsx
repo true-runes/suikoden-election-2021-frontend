@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { Container } from '@chakra-ui/react'
 import { Icon } from '@chakra-ui/react'
 import { IconButton } from '@chakra-ui/react'
+import { Alert, AlertIcon } from '@chakra-ui/react' // import {
 import { Box } from '@chakra-ui/react'
 import { Text } from '@chakra-ui/react'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
@@ -69,7 +70,7 @@ function App() {
   const [searchedScreenName, setSearchedScreenName] = useState('')
   const [searchedUsername, setSearchedUsername] = useState('')
   const [waitingTweetIsShownText, setWaitingTweetIsShownText] = useState(false)
-  // 0 が推し台詞、1 がお題小説
+  // 0 が推し台詞、1 がお題小説yarn
   const [tabIndex, setTabIndex] = useState(0)
 
   const changeSubmittedScreenName = (event: any) => {
@@ -89,10 +90,11 @@ function App() {
     setSearchedUsername('')
 
     let apiUri: any
+    // ハードコーディングは避ける
     if (tabIndex === 0) {
-      apiUri = process.env.REACT_APP_API_URI_RECOMMENDED_QUOTES
-    } else {
       apiUri = process.env.REACT_APP_API_URI_THEME_NOVELS
+    } else {
+      apiUri = process.env.REACT_APP_API_URI_RECOMMENDED_QUOTES
     }
 
     axios
@@ -267,7 +269,7 @@ function App() {
           <Stack shadow="md" borderWidth="1px">
             <Box p={4}>
               <Text align="left">
-                ※<span style={{ fontWeight: 'bold' }}>「幻水総選挙」</span>
+                ※<span style={{ fontWeight: 'bold' }}>幻水総選挙</span>
                 は、ファンによる非公式の企画です。公式ならびに既存の企業様とは一切関係ありません。
               </Text>{' '}
             </Box>
@@ -283,8 +285,9 @@ function App() {
               </Grid>
             </Box>
             <Box p={2}>
-              <Grid>2021年6月11日（金）21:00 から</Grid>
-              <Grid>2021年6月13日（日）12:00 まで</Grid>
+              <Grid>2021年6月11日（金）夜 21:00 から</Grid>
+              <Grid>2021年6月13日（日）昼 12:00 まで</Grid>
+              <Grid>（日本時間）</Grid>
             </Box>{' '}
             <Box p={2}>
               投票開始まであと{' '}
@@ -324,7 +327,7 @@ function App() {
             <Box p={2}>
               <Grid>
                 <Heading as="h3" size="lg">
-                  投稿チェック
+                  応募チェック
                 </Heading>
               </Grid>
             </Box>
@@ -341,7 +344,7 @@ function App() {
                       bg: 'blue.500',
                     }}
                   >
-                    推し台詞
+                    お題小説
                   </Tab>
                   <Tab
                     _selected={{
@@ -349,21 +352,21 @@ function App() {
                       bg: 'blue.500',
                     }}
                   >
-                    お題小説
+                    推し台詞
                   </Tab>
                 </TabList>
                 <TabPanels>
                   <TabPanel>
                     <Heading as="h4" size="md">
-                      推し台詞 投稿チェック
+                      お題小説 応募チェック
                     </Heading>
-                    <Box p={1}>（#幻水総選挙推し台詞）</Box>
+                    <Box p={1}>（#幻水総選挙お題小説）</Box>
                   </TabPanel>
                   <TabPanel>
                     <Heading as="h4" size="md">
-                      お題小説 投稿チェック
+                      推し台詞 応募チェック
                     </Heading>
-                    <Box p={1}>（#幻水総選挙お題小説）</Box>
+                    <Box p={1}>（#幻水総選挙推し台詞）</Box>
                   </TabPanel>
                 </TabPanels>
               </Tabs>
@@ -385,13 +388,17 @@ function App() {
                     />
                   </Box>
                   <Box p={2}>
-                    <Button
-                      type="submit"
-                      value="Submit"
-                      style={{ margin: '0 0 10px 0' }}
-                    >
+                    <Button type="submit" value="Submit">
                       検索する
                     </Button>
+                  </Box>
+                  <Box p={2} style={{ margin: '0 0 5px 0' }}>
+                    <Alert status="info">
+                      <AlertIcon />
+                      <Text align="left">
+                        <p>検索できるのは公開アカウントのツイートのみです。</p>
+                      </Text>
+                    </Alert>
                   </Box>
                 </FormControl>
               </Container>
@@ -404,6 +411,7 @@ function App() {
                 numberOfFoundTweets={numberOfFoundTweets}
                 searchedScreenName={searchedScreenName}
                 searchedUsername={searchedUsername}
+                tabIndex={tabIndex}
               />
             )}
             {isShownNowLoadingGifIcon ? <NowLoading area="isFoundArea" /> : ''}
