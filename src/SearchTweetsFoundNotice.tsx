@@ -6,7 +6,7 @@ import { Text } from '@chakra-ui/react'
 
 export const SearchTweetsFoundNotice = (props: any) => {
   // ハードコーディングになっているのは良くない
-  const tabNamesByTabIndex = ['推し台詞', 'お題小説']
+  const tabNamesByTabIndex = ['お題小説', '推し台詞']
 
   return (
     <Container maxW="container.xl">
