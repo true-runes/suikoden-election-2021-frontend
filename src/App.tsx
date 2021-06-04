@@ -326,7 +326,7 @@ function App() {
             <Box p={2}>
               <Grid>
                 <Heading as="h3" size="lg">
-                  投稿チェック
+                  応募チェック
                 </Heading>
               </Grid>
             </Box>
@@ -357,13 +357,13 @@ function App() {
                 <TabPanels>
                   <TabPanel>
                     <Heading as="h4" size="md">
-                      推し台詞 投稿チェック
+                      推し台詞 応募チェック
                     </Heading>
                     <Box p={1}>（#幻水総選挙推し台詞）</Box>
                   </TabPanel>
                   <TabPanel>
                     <Heading as="h4" size="md">
-                      お題小説 投稿チェック
+                      お題小説 応募チェック
                     </Heading>
                     <Box p={1}>（#幻水総選挙お題小説）</Box>
                   </TabPanel>
