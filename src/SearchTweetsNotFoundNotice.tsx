@@ -14,7 +14,7 @@ export const SearchTweetsNotFoundNotice = () => {
           <Box p={2} align="left">
             <p>ツイートが見つかりませんでした。</p>
             <p>
-              ご自身がなされたツイートが見つからない場合には
+              ご自身がなされたツイートが見つからない場合には、
               <a
                 href="https://twitter.com/gensosenkyo"
                 target="_blank"
@@ -23,7 +23,7 @@ export const SearchTweetsNotFoundNotice = () => {
               >
                 主催宛DM
               </a>
-              でご連絡下さい。
+              で該当ツイートをお送り下さい。
             </p>
           </Box>
         </Alert>
