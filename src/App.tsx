@@ -78,9 +78,6 @@ function App() {
   }
 
   const searchTweets = (event: any) => {
-    console.log(searchedUsername)
-    console.log(searchedScreenName)
-
     // 必要に応じて各種の値を初期化する
     setAlreadyFetchedApi(true)
     setSearchResultStatus('init')
