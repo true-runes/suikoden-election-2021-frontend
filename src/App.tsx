@@ -27,7 +27,6 @@ import {
 } from '@chakra-ui/react'
 
 import { ExternalLinkIcon, HamburgerIcon } from '@chakra-ui/icons'
-import { FcSearch } from 'react-icons/fc'
 import { FaTwitter } from 'react-icons/fa'
 import { CgWebsite } from 'react-icons/cg'
 
@@ -39,6 +38,7 @@ import './App.scss'
 import logo from './images/header.jpg'
 import { NowLoading } from './NowLoading'
 import { SearchTweetsStatus } from './SearchTweetsStatus'
+import { CheckVoteStatus } from './CheckVoteStatus'
 
 // TODO: .eslintrc.json で無理矢理 OFF にしたものは ON で通るようにする
 // "@typescript-eslint/no-explicit-any": "off",
@@ -62,19 +62,87 @@ function App() {
       isMentionedToGssAdmin: false,
     },
   ])
+
+  const [voteApiResponses, setVoteApiResponses] = useState([
+    {
+      id: 0,
+      tweetId: '',
+      username: '',
+      screenName: '',
+      fullText: '',
+      isRetweet: false,
+      url: '',
+      tweetedAt: '',
+      mediaExists: '',
+      isPublic: false,
+      isMentionedToGssAdmin: false,
+    },
+  ])
+
   const [alreadyFetchedApi, setAlreadyFetchedApi] = useState(false)
+  const [voteAlreadyFetchedApi, setVoteAlreadyFetchedApi] = useState(false)
   const [searchResultStatus, setSearchResultStatus] = useState('init')
+  const [voteSearchResultStatus, setVoteSearchResultStatus] = useState('init')
   const [numberOfFoundTweets, setNumberOfFoundTweets] = useState(0)
+  const [voteNumberOfFoundTweets, setVoteNumberOfFoundTweets] = useState(0)
   const [submittedScreenName, setSubmittedScreenName] = useState('')
+  const [voteSubmittedScreenName, setVoteSubmittedScreenName] = useState('')
   const [isShownNowLoadingGifIcon, setIsShowNowLoadingGifIcon] = useState(false)
+  const [voteIsShownNowLoadingGifIcon, setVoteIsShowNowLoadingGifIcon] =
+    useState(false)
   const [searchedScreenName, setSearchedScreenName] = useState('')
+  const [voteSearchedScreenName, setVoteSearchedScreenName] = useState('')
   const [searchedUsername, setSearchedUsername] = useState('')
+  const [voteSearchedUsername, setVoteSearchedUsername] = useState('')
   const [waitingTweetIsShownText, setWaitingTweetIsShownText] = useState(false)
+  const [voteWaitingTweetIsShownText, setVoteWaitingTweetIsShownText] =
+    useState(false)
+
   // 0 が推し台詞、1 がお題小説yarn
   const [tabIndex, setTabIndex] = useState(0)
 
   const changeSubmittedScreenName = (event: any) => {
     setSubmittedScreenName(event.target.value)
+  }
+
+  const changeVoteSubmittedScreenName = (event: any) => {
+    setVoteSubmittedScreenName(event.target.value)
+  }
+
+  const voteSearchTweets = (event: any) => {
+    // 必要に応じて各種の値を初期化する
+    setVoteAlreadyFetchedApi(true)
+    setVoteSearchResultStatus('init')
+    setVoteNumberOfFoundTweets(0)
+    setVoteIsShowNowLoadingGifIcon(true)
+    setVoteSearchedScreenName('')
+    setVoteSearchedUsername('')
+
+    const apiUri: any = process.env.REACT_APP_API_URI_CHECK_VOTE
+
+    axios
+      .get(apiUri, {
+        params: {
+          screen_name: voteSubmittedScreenName,
+        },
+      })
+      .then((response) => {
+        setVoteWaitingTweetIsShownText(true)
+        setVoteApiResponses(response.data)
+
+        if (response.data[0]) {
+          setVoteSearchResultStatus('found')
+          setVoteNumberOfFoundTweets(response.data.length)
+          setVoteSearchedScreenName(response.data[0].screenName)
+          setVoteSearchedUsername(response.data[0].username)
+        } else {
+          setVoteSearchResultStatus('notFound')
+        }
+
+        setVoteIsShowNowLoadingGifIcon(false)
+      })
+
+    event.preventDefault()
   }
 
   const searchTweets = (event: any) => {
@@ -165,10 +233,6 @@ function App() {
             <Box p={2}>幻水総選挙2021</Box>
           </DrawerHeader>
           <DrawerBody>
-            <Box p={2}>
-              <Icon as={FcSearch} style={{ margin: '0 10px 0 0' }} />
-              投票チェック（準備中）
-            </Box>
             <Box p={2}>
               <Icon
                 as={FaTwitter}
@@ -324,7 +388,91 @@ function App() {
             <Box p={2}>
               <Grid>
                 <Heading as="h3" size="lg">
+                  投票チェック
+                </Heading>
+              </Grid>
+            </Box>
+            <form onSubmit={voteSearchTweets}>
+              <Container maxW="container.xl" style={{ margin: '-15px 0 0 0' }}>
+                <FormControl id="email">
+                  <FormLabel>
+                    <Box p={2}>
+                      投票ツイートのチェックをしたいユーザー名を入れてください（@は省略可能）。
+                    </Box>
+                  </FormLabel>
+                  <Box p={2}>
+                    <Input
+                      type="text"
+                      value={voteSubmittedScreenName}
+                      onChange={changeVoteSubmittedScreenName}
+                      placeholder="@gensosenkyo（@は省略可能）"
+                    />
+                  </Box>
+                  <Box p={2}>
+                    <Button type="submit" value="Submit">
+                      チェックする
+                    </Button>
+                  </Box>
+                  <Box p={2} style={{ margin: '0 0 5px 0' }}>
+                    <Alert status="info">
+                      <AlertIcon />
+                      <Text align="left">
+                        <div>
+                          <p>
+                            検索できるのは公開アカウントのツイートのみです。
+                          </p>
+                        </div>
+                      </Text>
+                    </Alert>
+                  </Box>
+                </FormControl>
+              </Container>
+            </form>
+            {voteSearchResultStatus === 'init' ? (
+              ''
+            ) : (
+              <CheckVoteStatus
+                status={voteSearchResultStatus}
+                numberOfFoundTweets={voteNumberOfFoundTweets}
+                searchedScreenName={voteSearchedScreenName}
+                searchedUsername={voteSearchedUsername}
+              />
+            )}
+            {voteIsShownNowLoadingGifIcon ? (
+              <NowLoading area="isFoundArea" />
+            ) : (
+              ''
+            )}
+            {voteIsShownNowLoadingGifIcon || !voteAlreadyFetchedApi
+              ? ''
+              : voteApiResponses.map((e) => {
+                  return (
+                    <div key={e.id}>
+                      <Container>
+                        <div>{voteWaitingTweetIsShownText}</div>
+                        {voteWaitingTweetIsShownText ? (
+                          <NowLoading area="tweetsArea" />
+                        ) : (
+                          ''
+                        )}
+                        <Tweet
+                          tweetId={e.tweetId}
+                          onLoad={() => setVoteWaitingTweetIsShownText(false)}
+                        />
+                      </Container>
+                    </div>
+                  )
+                })}{' '}
+          </Stack>
+        </Box>
+        <Box p={2}>
+          <Stack shadow="md" borderWidth="1px">
+            <Box p={2}>
+              <Grid>
+                <Heading as="h3" size="lg">
                   応募チェック
+                  <br />
+                  （お題小説・推し台詞）
                 </Heading>
               </Grid>
             </Box>
@@ -393,7 +541,9 @@ function App() {
                     <Alert status="info">
                       <AlertIcon />
                       <Text align="left">
-                        <p>検索できるのは公開アカウントのツイートのみです。</p>
+                        <div>
+                          検索できるのは公開アカウントのツイートのみです。
+                        </div>
                       </Text>
                     </Alert>
                   </Box>
