@@ -414,6 +414,16 @@ function App() {
                     </Button>
                   </Box>
                   <Box p={2} style={{ margin: '0 0 5px 0' }}>
+                    <Alert status="error">
+                      <AlertIcon />
+                      <Text align="left">
+                        <div>
+                          ツイートが検索結果に反映されるまで、最大で20分程度かかることがあります。
+                        </div>
+                      </Text>
+                    </Alert>
+                  </Box>
+                  <Box p={2} style={{ margin: '0 0 5px 0' }}>
                     <Alert status="info">
                       <AlertIcon />
                       <Text align="left">
