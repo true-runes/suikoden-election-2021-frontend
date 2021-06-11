@@ -27,7 +27,6 @@ import {
 } from '@chakra-ui/react'
 
 import { ExternalLinkIcon, HamburgerIcon } from '@chakra-ui/icons'
-import { FcSearch } from 'react-icons/fc'
 import { FaTwitter } from 'react-icons/fa'
 import { CgWebsite } from 'react-icons/cg'
 
@@ -165,10 +164,6 @@ function App() {
             <Box p={2}>幻水総選挙2021</Box>
           </DrawerHeader>
           <DrawerBody>
-            <Box p={2}>
-              <Icon as={FcSearch} style={{ margin: '0 10px 0 0' }} />
-              投票チェック（準備中）
-            </Box>
             <Box p={2}>
               <Icon
                 as={FaTwitter}
