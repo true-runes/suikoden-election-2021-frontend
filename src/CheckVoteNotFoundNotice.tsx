@@ -12,34 +12,8 @@ export const CheckVoteNotFoundNotice = () => {
         <Alert status="error">
           <AlertIcon />
           <Box p={2} align="left">
-            <div>ツイートが見つかりませんでした。以下の点をご確認下さい。</div>
-          </Box>
-        </Alert>
-      </Box>
-      <Box p={2}>
-        <Alert status="info">
-          <AlertIcon />
-          <Box p={2} align="left">
-            <div>DM による投票はこのページでチェックすることはできません。</div>
-          </Box>
-        </Alert>
-      </Box>
-      <Box p={2}>
-        <Alert status="info">
-          <AlertIcon />
-          <Box p={2} align="left">
             <div>
-              ツイートを削除したりアカウントに鍵を付けたりした場合には、チェック結果へ反映されない場合があります。
-            </div>
-          </Box>
-        </Alert>
-      </Box>
-      <Box p={2}>
-        <Alert status="info">
-          <AlertIcon />
-          <Box p={2} align="left">
-            <div>
-              ツイートが見つからなかった場合は集計に反映されない可能性があります。時間をおいて再度チェックし、それでも見つからない場合は
+              ツイートが見つかりませんでした。
               <a
                 href="https://twitter.com/gensosenkyo"
                 target="_blank"
