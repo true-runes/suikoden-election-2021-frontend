@@ -1,22 +1,17 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import { Container } from '@chakra-ui/react'
 import { Icon } from '@chakra-ui/react'
 import { IconButton } from '@chakra-ui/react'
-import { Alert, AlertIcon } from '@chakra-ui/react' // import {
 import { Box } from '@chakra-ui/react'
 import { Text } from '@chakra-ui/react'
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
-import { FormControl, FormLabel } from '@chakra-ui/react'
 import { Grid } from '@chakra-ui/react'
 import { Heading } from '@chakra-ui/react'
 import { Stack } from '@chakra-ui/react'
 import { Link as ChakraLink } from '@chakra-ui/react'
-import { Button } from '@chakra-ui/react'
 import { Flex } from '@chakra-ui/react'
 import { Menu, MenuButton } from '@chakra-ui/react'
-import { Input } from '@chakra-ui/react'
 import { useDisclosure } from '@chakra-ui/react'
 import {
   Drawer,
@@ -25,20 +20,16 @@ import {
   DrawerOverlay,
   DrawerContent,
 } from '@chakra-ui/react'
+import MaterialTable from 'material-table'
+import { finalResult } from './result_data/finalResult'
 
 import { ExternalLinkIcon, HamburgerIcon } from '@chakra-ui/icons'
 import { FaTwitter } from 'react-icons/fa'
 import { CgWebsite } from 'react-icons/cg'
 
-import axios from 'axios'
-import { Tweet } from 'react-twitter-widgets'
-import Countdown, { zeroPad } from 'react-countdown'
-
 import './App.scss'
 import logo from './images/header.jpg'
-import { NowLoading } from './NowLoading'
-import { SearchTweetsStatus } from './SearchTweetsStatus'
-import { CheckVoteStatus } from './CheckVoteStatus'
+import { Localization } from 'material-table'
 
 // TODO: .eslintrc.json で無理矢理 OFF にしたものは ON で通るようにする
 // "@typescript-eslint/no-explicit-any": "off",
@@ -47,144 +38,57 @@ import { CheckVoteStatus } from './CheckVoteStatus'
 function App() {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const [apiResponses, setApiResponses] = useState([
-    {
-      id: 0,
-      tweetId: '',
-      username: '',
-      screenName: '',
-      fullText: '',
-      isRetweet: false,
-      url: '',
-      tweetedAt: '',
-      mediaExists: '',
-      isPublic: false,
-      isMentionedToGssAdmin: false,
+  const localizationJapanese: Localization = {
+    error: 'エラー',
+    body: {
+      emptyDataSourceMessage: '表示するレコードがありません。',
+      filterRow: {
+        filterPlaceHolder: '',
+        filterTooltip: 'フィルター',
+      },
+      editRow: {
+        saveTooltip: '保存',
+        cancelTooltip: 'キャンセル',
+        deleteText: 'この行を削除しますか？',
+      },
+      addTooltip: '追加',
+      deleteTooltip: '削除',
+      editTooltip: '編集',
     },
-  ])
-
-  const [voteApiResponses, setVoteApiResponses] = useState([
-    {
-      id: 0,
-      tweetId: '',
-      username: '',
-      screenName: '',
-      fullText: '',
-      isRetweet: false,
-      url: '',
-      tweetedAt: '',
-      mediaExists: '',
-      isPublic: false,
-      isMentionedToGssAdmin: false,
+    header: {
+      actions: 'アクション',
     },
-  ])
-
-  const [alreadyFetchedApi, setAlreadyFetchedApi] = useState(false)
-  const [voteAlreadyFetchedApi, setVoteAlreadyFetchedApi] = useState(false)
-  const [searchResultStatus, setSearchResultStatus] = useState('init')
-  const [voteSearchResultStatus, setVoteSearchResultStatus] = useState('init')
-  const [numberOfFoundTweets, setNumberOfFoundTweets] = useState(0)
-  const [voteNumberOfFoundTweets, setVoteNumberOfFoundTweets] = useState(0)
-  const [submittedScreenName, setSubmittedScreenName] = useState('')
-  const [voteSubmittedScreenName, setVoteSubmittedScreenName] = useState('')
-  const [isShownNowLoadingGifIcon, setIsShowNowLoadingGifIcon] = useState(false)
-  const [voteIsShownNowLoadingGifIcon, setVoteIsShowNowLoadingGifIcon] =
-    useState(false)
-  const [searchedScreenName, setSearchedScreenName] = useState('')
-  const [voteSearchedScreenName, setVoteSearchedScreenName] = useState('')
-  const [searchedUsername, setSearchedUsername] = useState('')
-  const [voteSearchedUsername, setVoteSearchedUsername] = useState('')
-  const [waitingTweetIsShownText, setWaitingTweetIsShownText] = useState(false)
-  const [voteWaitingTweetIsShownText, setVoteWaitingTweetIsShownText] =
-    useState(false)
-
-  // 0 が推し台詞、1 がお題小説yarn
-  const [tabIndex, setTabIndex] = useState(0)
-
-  const changeSubmittedScreenName = (event: any) => {
-    setSubmittedScreenName(event.target.value)
-  }
-
-  const changeVoteSubmittedScreenName = (event: any) => {
-    setVoteSubmittedScreenName(event.target.value)
-  }
-
-  const voteSearchTweets = (event: any) => {
-    // 必要に応じて各種の値を初期化する
-    setVoteAlreadyFetchedApi(true)
-    setVoteSearchResultStatus('init')
-    setVoteNumberOfFoundTweets(0)
-    setVoteIsShowNowLoadingGifIcon(true)
-    setVoteSearchedScreenName('')
-    setVoteSearchedUsername('')
-
-    const apiUri: any = process.env.REACT_APP_API_URI_CHECK_VOTE
-
-    axios
-      .get(apiUri, {
-        params: {
-          screen_name: voteSubmittedScreenName,
-        },
-      })
-      .then((response) => {
-        setVoteWaitingTweetIsShownText(true)
-        setVoteApiResponses(response.data)
-
-        if (response.data[0]) {
-          setVoteSearchResultStatus('found')
-          setVoteNumberOfFoundTweets(response.data.length)
-          setVoteSearchedScreenName(response.data[0].screenName)
-          setVoteSearchedUsername(response.data[0].username)
-        } else {
-          setVoteSearchResultStatus('notFound')
-        }
-
-        setVoteIsShowNowLoadingGifIcon(false)
-      })
-
-    event.preventDefault()
-  }
-
-  const searchTweets = (event: any) => {
-    // 必要に応じて各種の値を初期化する
-    setAlreadyFetchedApi(true)
-    setSearchResultStatus('init')
-    setNumberOfFoundTweets(0)
-    setIsShowNowLoadingGifIcon(true)
-    setSearchedScreenName('')
-    setSearchedUsername('')
-
-    let apiUri: any
-    // ハードコーディングは避ける
-    if (tabIndex === 0) {
-      apiUri = process.env.REACT_APP_API_URI_THEME_NOVELS
-    } else {
-      apiUri = process.env.REACT_APP_API_URI_RECOMMENDED_QUOTES
-    }
-
-    axios
-      .get(apiUri, {
-        params: {
-          screen_name: submittedScreenName,
-        },
-      })
-      .then((response) => {
-        setWaitingTweetIsShownText(true)
-        setApiResponses(response.data)
-
-        if (response.data[0]) {
-          setSearchResultStatus('found')
-          setNumberOfFoundTweets(response.data.length)
-          setSearchedScreenName(response.data[0].screenName)
-          setSearchedUsername(response.data[0].username)
-        } else {
-          setSearchResultStatus('notFound')
-        }
-
-        setIsShowNowLoadingGifIcon(false)
-      })
-
-    event.preventDefault()
+    grouping: {
+      groupedBy: 'グループ化:',
+      placeholder: 'ヘッダーをドラッグ ...',
+    },
+    pagination: {
+      firstTooltip: '最初のページ',
+      firstAriaLabel: '最初のページ',
+      previousTooltip: '前のページ',
+      previousAriaLabel: '前のページ',
+      nextTooltip: '次のページ',
+      nextAriaLabel: '次のページ',
+      labelDisplayedRows: '{from}-{to} 全{count}件',
+      labelRowsPerPage: 'ページあたりの行数:',
+      lastTooltip: '最後のページ',
+      lastAriaLabel: '最後のページ',
+      labelRowsSelect: '行',
+    },
+    toolbar: {
+      addRemoveColumns: '列の追加、削除',
+      nRowsSelected: '{0} 行選択',
+      showColumnsTitle: '列の表示',
+      showColumnsAriaLabel: '列の表示',
+      exportTitle: '出力',
+      exportAriaLabel: '出力',
+      exportCSVName: 'CSV出力',
+      exportPDFName: 'PDF出力',
+      searchTooltip: '検索',
+      searchPlaceholder: '検索',
+      searchAriaLabel: '検索',
+      clearSearchAriaLabel: 'クリア',
+    },
   }
 
   return (
@@ -338,31 +242,33 @@ function App() {
         </Box>
         <Box p={2}>
           <Stack shadow="md" borderWidth="1px">
-            <Box p={2}>
-              <Grid>
-                <Heading as="h3" size="lg">
-                  投票期間
-                </Heading>
-              </Grid>
-            </Box>
-            <Box p={2}>
-              <Grid>2021年6月11日（金）夜 21:00 から</Grid>
-              <Grid>2021年6月13日（日）昼 12:00 まで</Grid>
-              <Grid>（日本時間）</Grid>
-            </Box>{' '}
-            <Box p={2}>
-              投票開始まであと{' '}
-              <Countdown
-                date="2021-06-11T21:00:00+09:00"
-                intervalDelay={0}
-                precision={3}
-                renderer={(props) => (
-                  <span>
-                    {props.days} 日 と {zeroPad(props.hours)}:
-                    {zeroPad(props.minutes)}:{zeroPad(props.seconds)}
-                  </span>
-                )}
-              />
+            <Box p={4}>
+              <Box p={2}>
+                <Grid>
+                  <Heading as="h3" size="lg">
+                    投票データ
+                  </Heading>
+                </Grid>
+              </Box>{' '}
+              <Box p={2}>
+                <Grid>
+                  <Text fontSize="2xl">総投票人数</Text>
+                  <Text fontSize="xl">2,357人</Text>
+                  <Text fontSize="sm">（ツイート 2,157人・DM 200人）</Text>
+                </Grid>
+              </Box>{' '}
+              <Box p={2}>
+                <Grid>
+                  <Text fontSize="2xl">総投票数</Text>
+                  <Text fontSize="xl">6,395票</Text>
+                  <Text fontSize="sm">（ツイート 5,790票・DM 605票）</Text>
+                </Grid>
+              </Box>{' '}
+              <Box p={2}>
+                <Grid>
+                  <Text fontSize="xl">ご参加ありがとうございました！</Text>
+                </Grid>
+              </Box>{' '}
             </Box>
           </Stack>
         </Box>
@@ -371,13 +277,13 @@ function App() {
             <Box p={2}>
               <Grid>
                 <Heading as="h3" size="lg">
-                  投票方法など
+                  開票ツイートまとめ
                 </Heading>
               </Grid>
             </Box>
             <Box p={2}>
-              <ChakraLink href="https://min.togetter.com/e75K0EY" isExternal>
-                幻水総選挙2021について (min.t のまとめ){' '}
+              <ChakraLink href="https://min.togetter.com/AN0aHbB" isExternal>
+                投票開始～終了・開票ツイート (min.t){' '}
                 <ExternalLinkIcon mx="2px" />
               </ChakraLink>{' '}
             </Box>{' '}
@@ -388,81 +294,105 @@ function App() {
             <Box p={2}>
               <Grid>
                 <Heading as="h3" size="lg">
-                  投票チェック
+                  ハッシュタグ 検索リンク
                 </Heading>
               </Grid>
             </Box>
-            <form onSubmit={voteSearchTweets}>
-              <Container maxW="container.xl" style={{ margin: '-15px 0 0 0' }}>
-                <FormControl id="email">
-                  <FormLabel>
-                    <Box p={2}>
-                      投票ツイートのチェックをしたいユーザー名を入れてください（@は省略可能）。
-                    </Box>
-                  </FormLabel>
-                  <Box p={2}>
-                    <Input
-                      type="text"
-                      value={voteSubmittedScreenName}
-                      onChange={changeVoteSubmittedScreenName}
-                      placeholder="@gensosenkyo（@は省略可能）"
-                    />
-                  </Box>
-                  <Box p={2}>
-                    <Button type="submit" value="Submit">
-                      チェックする
-                    </Button>
-                  </Box>
-                  <Box p={2} style={{ margin: '0 0 5px 0' }}>
-                    <Alert status="info">
-                      <AlertIcon />
-                      <Text align="left">
-                        <div>
-                          <p>
-                            検索できるのは公開アカウントのツイートのみです。
-                          </p>
-                        </div>
-                      </Text>
-                    </Alert>
-                  </Box>
-                </FormControl>
-              </Container>
-            </form>
-            {voteSearchResultStatus === 'init' ? (
-              ''
-            ) : (
-              <CheckVoteStatus
-                status={voteSearchResultStatus}
-                numberOfFoundTweets={voteNumberOfFoundTweets}
-                searchedScreenName={voteSearchedScreenName}
-                searchedUsername={voteSearchedUsername}
+            <Box p={2}>
+              <p>
+                <ChakraLink
+                  href="https://twitter.com/search?q=%23%E5%B9%BB%E6%B0%B4%E7%B7%8F%E9%81%B8%E6%8C%992021&f=live"
+                  isExternal
+                >
+                  #幻水総選挙2021 <ExternalLinkIcon mx="2px" />
+                </ChakraLink>
+              </p>
+              <p>
+                <ChakraLink
+                  href="https://twitter.com/search?q=%23%E5%B9%BB%E6%B0%B4%E7%B7%8F%E9%81%B8%E6%8C%99%E9%81%8B%E5%8B%95&f=live"
+                  isExternal
+                >
+                  #幻水総選挙運動 <ExternalLinkIcon mx="2px" />
+                </ChakraLink>
+              </p>
+              <p>
+                <ChakraLink
+                  href="https://twitter.com/search?q=%23%E5%B9%BB%E6%B0%B4%E7%B7%8F%E9%81%B8%E6%8C%99%E3%81%8A%E9%A1%8C%E5%B0%8F%E8%AA%AC&f=live"
+                  isExternal
+                >
+                  #幻水総選挙お題小説 <ExternalLinkIcon mx="2px" />
+                </ChakraLink>
+              </p>
+              <p>
+                <ChakraLink
+                  href="https://twitter.com/search?q=%23%E5%B9%BB%E6%B0%B4%E7%B7%8F%E9%81%B8%E6%8C%99%E6%8E%A8%E3%81%97%E5%8F%B0%E8%A9%9E&f=live"
+                  isExternal
+                >
+                  #幻水総選挙推し台詞 <ExternalLinkIcon mx="2px" />
+                </ChakraLink>
+              </p>
+              <p>
+                <ChakraLink
+                  href="https://twitter.com/search?q=%23%E5%B9%BB%E6%B0%B4%E7%B7%8F%E9%81%B8%E6%8C%99%E9%96%8B%E7%A5%A8%E4%B8%AD&f=live"
+                  isExternal
+                >
+                  #幻水総選挙開票中 <ExternalLinkIcon mx="2px" />
+                </ChakraLink>
+              </p>
+              <p>
+                <ChakraLink
+                  href="https://twitter.com/search?q=%23%E5%B9%BB%E6%B0%B4%E7%B7%8F%E9%81%B8%E6%8C%99%E5%BE%8C%E5%A4%9C%E7%A5%AD&f=live"
+                  isExternal
+                >
+                  #幻水総選挙後夜祭 <ExternalLinkIcon mx="2px" />
+                </ChakraLink>
+              </p>
+              <p>
+                <ChakraLink
+                  href="https://twitter.com/search?q=%23%E5%B9%BB%E6%B0%B4%E3%83%8D%E3%83%83%E3%83%88%E3%83%97%E3%83%AA%E3%83%B3%E3%83%88&f=live"
+                  isExternal
+                >
+                  #幻水ネットプリント <ExternalLinkIcon mx="2px" />
+                </ChakraLink>
+              </p>
+            </Box>{' '}
+          </Stack>
+        </Box>
+        <Box p={2}>
+          <Stack shadow="md" borderWidth="1px">
+            <Box p={4}>
+              <Box p={2}>
+                <Grid>
+                  <Heading as="h3" size="lg">
+                    最終順位
+                  </Heading>
+                </Grid>
+              </Box>{' '}
+              <MaterialTable
+                columns={[
+                  {
+                    title: '順位',
+                    field: 'rank',
+                    filtering: false,
+                  },
+                  { title: 'キャラ名', field: 'characterName' },
+                  { title: '票数', field: 'sumOfVotes', filtering: false },
+                ]}
+                data={finalResult()}
+                title=""
+                localization={localizationJapanese}
+                options={{
+                  pageSize: 361,
+                  paging: false,
+                  search: true,
+                  filtering: false,
+                  sorting: true,
+                  headerStyle: {
+                    backgroundColor: '#f0f8ff',
+                  },
+                }}
               />
-            )}
-            {voteIsShownNowLoadingGifIcon ? (
-              <NowLoading area="isFoundArea" />
-            ) : (
-              ''
-            )}
-            {voteIsShownNowLoadingGifIcon || !voteAlreadyFetchedApi
-              ? ''
-              : voteApiResponses.map((e) => {
-                  return (
-                    <div key={e.id}>
-                      <Container>
-                        <div>{voteWaitingTweetIsShownText}</div>
-                        {voteWaitingTweetIsShownText ? (
-                          <NowLoading area="tweetsArea" />
-                        ) : (
-                          ''
-                        )}
-                        <Tweet
-                          tweetId={e.tweetId}
-                          onLoad={() => setVoteWaitingTweetIsShownText(false)}
-                        />
-                      </Container>
-                    </div>
-                  )
-                })}{' '}
+            </Box>
           </Stack>
         </Box>
         <Box p={2}>
@@ -470,118 +400,15 @@ function App() {
             <Box p={2}>
               <Grid>
                 <Heading as="h3" size="lg">
-                  応募チェック
-                  <br />
-                  （お題小説・推し台詞）
+                  幻水総選挙2021について
                 </Heading>
               </Grid>
             </Box>
             <Box p={2}>
-              <Tabs
-                isFitted
-                variant="line"
-                onChange={(index) => setTabIndex(index)}
-              >
-                <TabList mb="0.3em">
-                  <Tab
-                    _selected={{
-                      color: 'white',
-                      bg: 'blue.500',
-                    }}
-                  >
-                    お題小説
-                  </Tab>
-                  <Tab
-                    _selected={{
-                      color: 'white',
-                      bg: 'blue.500',
-                    }}
-                  >
-                    推し台詞
-                  </Tab>
-                </TabList>
-                <TabPanels>
-                  <TabPanel>
-                    <Heading as="h4" size="md">
-                      お題小説 応募チェック
-                    </Heading>
-                    <Box p={1}>（#幻水総選挙お題小説）</Box>
-                  </TabPanel>
-                  <TabPanel>
-                    <Heading as="h4" size="md">
-                      推し台詞 応募チェック
-                    </Heading>
-                    <Box p={1}>（#幻水総選挙推し台詞）</Box>
-                  </TabPanel>
-                </TabPanels>
-              </Tabs>
-            </Box>
-            <form onSubmit={searchTweets}>
-              <Container maxW="container.xl" style={{ margin: '-15px 0 0 0' }}>
-                <FormControl id="email">
-                  <FormLabel>
-                    <Box p={2}>
-                      ツイートのチェックをしたいユーザー名を入れてください（@は省略可能）。
-                    </Box>
-                  </FormLabel>
-                  <Box p={2}>
-                    <Input
-                      type="text"
-                      value={submittedScreenName}
-                      onChange={changeSubmittedScreenName}
-                      placeholder="@gensosenkyo（@は省略可能）"
-                    />
-                  </Box>
-                  <Box p={2}>
-                    <Button type="submit" value="Submit">
-                      検索する
-                    </Button>
-                  </Box>
-                  <Box p={2} style={{ margin: '0 0 5px 0' }}>
-                    <Alert status="info">
-                      <AlertIcon />
-                      <Text align="left">
-                        <div>
-                          検索できるのは公開アカウントのツイートのみです。
-                        </div>
-                      </Text>
-                    </Alert>
-                  </Box>
-                </FormControl>
-              </Container>
-            </form>
-            {searchResultStatus === 'init' ? (
-              ''
-            ) : (
-              <SearchTweetsStatus
-                status={searchResultStatus}
-                numberOfFoundTweets={numberOfFoundTweets}
-                searchedScreenName={searchedScreenName}
-                searchedUsername={searchedUsername}
-                tabIndex={tabIndex}
-              />
-            )}
-            {isShownNowLoadingGifIcon ? <NowLoading area="isFoundArea" /> : ''}
-            {isShownNowLoadingGifIcon || !alreadyFetchedApi
-              ? ''
-              : apiResponses.map((e) => {
-                  return (
-                    <div key={e.id}>
-                      <Container>
-                        <div>{waitingTweetIsShownText}</div>
-                        {waitingTweetIsShownText ? (
-                          <NowLoading area="tweetsArea" />
-                        ) : (
-                          ''
-                        )}
-                        <Tweet
-                          tweetId={e.tweetId}
-                          onLoad={() => setWaitingTweetIsShownText(false)}
-                        />
-                      </Container>
-                    </div>
-                  )
-                })}
+              <ChakraLink href="https://min.togetter.com/e75K0EY" isExternal>
+                幻水総選挙2021について (min.t) <ExternalLinkIcon mx="2px" />
+              </ChakraLink>{' '}
+            </Box>{' '}
           </Stack>
         </Box>
         <Box p={2}>
