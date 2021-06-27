@@ -17,7 +17,7 @@ jobs:
   build:
     executor:
       name: node_executor
-      version_tag: 14.17.0
+      version_tag: 14.17.1
     environment:
       TZ: "Asia/Tokyo"
     working_directory: ~/working_directory
