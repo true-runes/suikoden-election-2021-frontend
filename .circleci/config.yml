@@ -11,13 +11,13 @@ executors:
     parameters:
       version_tag:
         type: string
-        default: 14.16.1
+        default: 14.17.6
 
 jobs:
   build:
     executor:
       name: node_executor
-      version_tag: 14.17.1
+      version_tag: 14.17.6
     environment:
       TZ: "Asia/Tokyo"
     working_directory: ~/working_directory
