@@ -42,7 +42,7 @@
     "eslint-plugin-react-hooks": "4.3.0",
     "framer-motion": "5.5.5",
     "material-table": "1.69.3",
-    "node-sass": "7.0.0",
+    "node-sass": "7.0.1",
     "prettier": "2.5.1",
     "react-countdown": "2.3.2",
     "react-icons": "4.3.1",
