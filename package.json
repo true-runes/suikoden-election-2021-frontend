@@ -38,7 +38,7 @@
     "axios": "0.26.1",
     "eslint": "8.11.0",
     "eslint-config-prettier": "8.5.0",
-    "eslint-plugin-react": "7.29.3",
+    "eslint-plugin-react": "7.29.4",
     "eslint-plugin-react-hooks": "4.3.0",
     "framer-motion": "6.2.8",
     "material-table": "2.0.3",
