@@ -40,7 +40,7 @@
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-react": "7.31.11",
     "eslint-plugin-react-hooks": "4.4.0",
-    "framer-motion": "6.2.8",
+    "framer-motion": "6.5.1",
     "material-table": "2.0.3",
     "node-sass": "7.0.3",
     "prettier": "2.6.1",
