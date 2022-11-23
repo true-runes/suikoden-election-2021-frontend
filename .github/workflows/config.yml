@@ -5,7 +5,7 @@ jobs:
     name: GitHub Actions CI
     runs-on: ubuntu-latest
     container:
-      image: node:14.17.6
+      image: node:14.21.1
     steps:
       - uses: actions/checkout@v3
       - name: simple-git-hooks 用のダミーディレクトリを作成
