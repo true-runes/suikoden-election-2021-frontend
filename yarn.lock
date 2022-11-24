@@ -7162,10 +7162,10 @@ fraction.js@^4.1.1:
   resolved "https://registry.yarnpkg.com/fraction.js/-/fraction.js-4.1.2.tgz#13e420a92422b6cf244dff8690ed89401029fbe8"
   integrity sha512-o2RiJQ6DZaR/5+Si0qJUIy637QMRudSi9kU/FFzx9EZazrIdnBgpU+3sEWCxAVhH2RtxW2Oz+T4p2o8uOPVcgA==
 
-framer-motion@7.6.9:
-  version "7.6.9"
-  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-7.6.9.tgz#d2c8ca8b97580aa00f7c6e2b616da241bd2ce8e6"
-  integrity sha512-byPSPOqKApmVUvbtvmFCyL09dqBNLUwkXRQMeTsawtF6YpiB54yCVzk+9YXAnoswMSgsB7CQaA6ls7e8QL+C+g==
+framer-motion@7.6.11:
+  version "7.6.11"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-7.6.11.tgz#0bce2a6954b2614d45a0f5ea8d809db9dbd3db5e"
+  integrity sha512-RJTyrHl6LUVwGW+oOvLaRjPkw92vpyMigTfcCOKTJbK14LfBglb62IqzVk2kXI9v9jCvmcGhh5qDhCrrjvTYpw==
   dependencies:
     "@motionone/dom" "10.13.1"
     framesync "6.1.2"
