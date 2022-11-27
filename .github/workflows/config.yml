@@ -38,7 +38,7 @@ jobs:
           mkdir -p ./screenshots
       - name: Webブラウザで JavaScript が解釈されて期待どおりに表示されているかを簡易チェックする
         run: |
-          npx http-server build/ -p 8080 &
+          php -t build/ -S localhost:8080 &
           # http-server が起きるまで待つ
           until : > /dev/tcp/localhost/8080; do sleep 1; done
 
@@ -48,7 +48,7 @@ jobs:
           # 文字列が存在しない場合はエラーを返すので CI が落ちる
           grep -q "総選挙" screenshot_ocr.txt
       - name: capture-website CLI で撮影したスクショを Artifacts に保存する
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: always()
         with:
           name: capture-website
