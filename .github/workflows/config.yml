@@ -1,37 +1,55 @@
-on: [push]
 name: 幻水総選挙2021（フロントエンド）
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '**'
+    tags-ignore:
+      - 'v*.*.*'
+
 jobs:
-  suikoden_election_2021_database_github_actions:
-    name: GitHub Actions CI
+  gensosenkyo_2021_frontend:
+    name: 幻水総選挙2021（フロントエンド）
     runs-on: ubuntu-latest
-    container:
-      image: node:14.17.0
+    strategy:
+      matrix:
+        # node-version: ['14.x', '16.x', '18.x']
+        node-version: ['14.17.0']
     steps:
-      - uses: actions/checkout@v2
-      - name: simple-git-hooks 用のダミーディレクトリを作成
-        run: |
-          mkdir .git
-          mkdir .git/hooks
-      # - name: 基本パッケージのインストールを行う
-      #   run: |
-      #     apt-get update
-      #     apt-get install -y gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget lsof
-      - name: Yarn のインストールを行う
-        run: |
-          curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-          echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-          apt-get update
-          apt-get install -y yarn
-      - name: Yarn のキャッシュのパスを取得する
-        id: yarn-cache
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: Yarn のキャッシュファイルを取得する
-        uses: actions/cache@v1
+      - name: コードをチェックアウトする
+        uses: actions/checkout@v3
+      - name: Node.js のセットアップを行う
+        uses: actions/setup-node@v3
         with:
-          path: ${{ steps.yarn-cache.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          node-version: ${{ matrix.node-version }}
+          cache: yarn
+          cache-dependency-path: yarn.lock
       - name: $ yarn install を行う
         run: |
           yarn install
+      - name: $ yarn build が通るかチェックする
+        run: |
+          yarn build
+      - name: OCR をするために必要なパッケージをインストールする
+        run: |
+          yarn add --dev capture-website-cli
+          sudo apt install -y tesseract-ocr libtesseract-dev tesseract-ocr-jpn fonts-migmix
+          mkdir -p ./screenshots
+      - name: Webブラウザで JavaScript が解釈されて期待どおりに表示されているかを簡易チェックする
+        run: |
+          php -t build/ -S localhost:8080 &
+          # http-server が起きるまで待つ
+          until : > /dev/tcp/localhost/8080; do sleep 1; done
+
+          npx capture-website http://localhost:8080 --output=screenshots/screenshot.png
+          tesseract screenshots/screenshot.png screenshot_ocr -l jpn txt
+
+          # 文字列が存在しない場合はエラーを返すので CI が落ちる
+          grep -q "総選挙" screenshot_ocr.txt
+      - name: capture-website CLI で撮影したスクショを Artifacts に保存する
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: capture-website
+          path: screenshots
