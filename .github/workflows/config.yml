@@ -33,7 +33,6 @@ jobs:
           yarn build
       - name: OCR をするために必要なパッケージをインストールする
         run: |
-          yarn add --dev capture-website-cli
           sudo apt install -y tesseract-ocr libtesseract-dev tesseract-ocr-jpn fonts-migmix
           mkdir -p ./screenshots
       - name: Webブラウザで JavaScript が解釈されて期待どおりに表示されているかを簡易チェックする
