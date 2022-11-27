@@ -39,6 +39,9 @@ jobs:
       - name: Webブラウザで JavaScript が解釈されて期待どおりに表示されているかを簡易チェックする
         run: |
           npx http-server build/ -p 8080 &
+          # http-server が起きるまで待つ
+          until : > /dev/tcp/localhost/8080; do sleep 1; done
+
           npx capture-website http://localhost:8080 --output=screenshots/screenshot.png
           tesseract screenshots/screenshot.png screenshot_ocr -l jpn txt
 
