@@ -31,13 +31,14 @@ jobs:
       - name: $ yarn build が通るかチェックする
         run: |
           yarn build
-      - name: Webブラウザで JavaScript が解釈されて期待どおりに表示されているかを簡易チェックする
+      - name: OCR をするために必要なパッケージをインストールする
         run: |
           yarn add --dev capture-website-cli
           sudo apt install -y tesseract-ocr libtesseract-dev tesseract-ocr-jpn fonts-migmix
-
-          npx http-server build/ -p 8080 &
           mkdir -p ./screenshots
+      - name: Webブラウザで JavaScript が解釈されて期待どおりに表示されているかを簡易チェックする
+        run: |
+          npx http-server build/ -p 8080 &
           npx capture-website http://localhost:8080 --output=screenshots/screenshot.png
           tesseract screenshots/screenshot.png screenshot_ocr -l jpn txt
 
