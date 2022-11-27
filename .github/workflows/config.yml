@@ -33,7 +33,7 @@ jobs:
           yarn build
       - name: Webブラウザで JavaScript が解釈されて期待どおりに表示されているかを簡易チェックする
         run: |
-          yarn add --dev capture-website --unsafe-perm
+          yarn add --dev capture-website-cli
           sudo apt install -y tesseract-ocr libtesseract-dev tesseract-ocr-jpn fonts-migmix
 
           npx http-server build/ -p 8080 &
