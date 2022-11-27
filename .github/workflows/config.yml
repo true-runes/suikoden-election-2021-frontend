@@ -19,10 +19,6 @@ jobs:
     steps:
       - name: コードをチェックアウトする
         uses: actions/checkout@v3
-      - name: simple-git-hooks 用のダミーディレクトリを作成
-        run: |
-          mkdir .git
-          mkdir .git/hooks
       - name: Node.js のセットアップを行う
         uses: actions/setup-node@v3
         with:
@@ -41,8 +37,15 @@ jobs:
           apt install -y tesseract-ocr libtesseract-dev tesseract-ocr-jpn fonts-migmix
 
           npx http-server build/ -p 8080 &
-          npx capture-website http://localhost:8080 --output=screenshot.png
-          tesseract screenshot.png screenshot_ocr -l jpn txt
+          mkdir -p ./screenshots
+          npx capture-website http://localhost:8080 --output=screenshots/screenshot.png
+          tesseract screenshots/screenshot.png screenshot_ocr -l jpn txt
 
           # 文字列が存在しない場合はエラーを返すので CI が落ちる
           grep -q "総選挙" screenshot_ocr.txt
+      - name: capture-website CLI で撮影したスクショを Artifacts に保存する
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: capture-website
+          path: screenshots
