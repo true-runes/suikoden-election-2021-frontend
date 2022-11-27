@@ -35,3 +35,6 @@ jobs:
       - name: $ yarn install を行う
         run: |
           yarn install
+      - name: $ yarn build が通ることを確かめる
+        run: |
+          yarn build
