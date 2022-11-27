@@ -25,9 +25,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: yarn
           cache-dependency-path: yarn.lock
-      # - name: $ yarn install を行う
-      #   run: |
-      #     yarn install
+      - name: $ yarn install を行う
+        run: |
+          yarn install
       - name: $ yarn build が通るかチェックする
         run: |
           yarn build
