@@ -49,7 +49,7 @@
     "react-router-dom": "^5.2.0",
     "react-twitter-widgets": "^1.10.0",
     "simple-git-hooks": "^2.4.1",
-    "typescript": "^4.3.2"
+    "typescript": "^4.9.3"
   },
   "eslintConfig": {
     "extends": [
